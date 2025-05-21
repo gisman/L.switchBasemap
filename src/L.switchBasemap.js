@@ -101,3 +101,16 @@ L.Control.basemapsSwitcher = L.Control.extend({
 L.basemapsSwitcher = function(layers, options){
     return new L.Control.basemapsSwitcher(layers, options);  
 }
+
+// Add bringToBack method to L.LayerGroup
+// vworld의 Hybrid map(위성영상과 벡터지도를 결합하여 제공하는 지도)은 두 개의 basemap을 분리하여 제공하는데, 이때 두 개의 basemap을 LayerGroup으로 묶어서 L.basemapsSwitcher에 넣어줘야 함
+// LayerGroup은 bringToBack 메서드를 지원하지 않기 때문에, L.LayerGroup.prototype.bringToBack을 추가하여 사용해야 함
+// 2025.05.21 gisman
+L.LayerGroup.prototype.bringToBack = function() {
+    this.eachLayer(function(layer) {
+        if (layer.bringToBack) {
+            layer.bringToBack();
+        }
+    });
+    return this;
+};
